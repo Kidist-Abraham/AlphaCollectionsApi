@@ -4,11 +4,10 @@ This repository contains the **backend** for managing "Collections" and user con
 
 ## Table of Contents
 
-1. [Overview](#overview)  
-2. [Environment Variables](#environment-variables)  
-3. [Setup & Installation](#setup--installation)  
-
-6. [Example Usage](#example-usage)
+1. [Overview](#1-overview)  
+2. [Environment Variables](#2-environment-variables)  
+3. [Setup & Installation](#3-setup--installation)  
+4. [Example Usage](#4-example-usage)
 
 ---
 
@@ -78,4 +77,4 @@ Run docker compose:
  docker-compose up --build -d
 ```
 
-The server listens on localhost PORT 3000.
+This will run the database and backed services and the backed server listens on localhost PORT 3000.
