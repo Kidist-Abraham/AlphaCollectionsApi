@@ -64,8 +64,8 @@ Clone the repo:
 
 ```bash
 
-git clone https://github.com/your-username/collections-backend.git
-cd collections-backend
+git clone https://github.com/Kidist-Abraham/AlphaCollectionsApi.git
+cd AlphaCollectionsApi
 ```
 
 Create and populate .env file (see [Environment Variables](#2-environment-variables) ).
