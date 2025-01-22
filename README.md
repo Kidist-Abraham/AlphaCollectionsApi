@@ -7,7 +7,6 @@ This repository contains the **backend** for managing "Collections" and user con
 1. [Overview](#1-overview)  
 2. [Environment Variables](#2-environment-variables)  
 3. [Setup & Installation](#3-setup--installation)  
-4. [Example Usage](#4-example-usage)
 
 ---
 
@@ -69,7 +68,7 @@ git clone https://github.com/your-username/collections-backend.git
 cd collections-backend
 ```
 
-Create and populate .env file (see [Environment Variables](#environment-variables) ).
+Create and populate .env file (see [Environment Variables](#2-environment-variables) ).
 
 Run docker compose:
 
