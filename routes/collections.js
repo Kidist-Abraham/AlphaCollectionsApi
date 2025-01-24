@@ -4,8 +4,7 @@ const db = require("../db");
 
 const router = express.Router();
 
-// Get all collections
-// Example: collections.js (Node + Express)
+// Get collections
 router.get("/", authenticateToken, async (req, res) => {
     try {
       // Grab query params: page, limit, and search query
@@ -15,8 +14,6 @@ router.get("/", authenticateToken, async (req, res) => {
   
       const offset = (page - 1) * limit; // for pagination
   
-      // Example using PostgreSQL:
-      // "ILIKE" for case-insensitive matching. Adjust for your DB as needed.
       const searchQuery = `
         SELECT * FROM collections
         WHERE name ILIKE $1
@@ -27,7 +24,6 @@ router.get("/", authenticateToken, async (req, res) => {
   
       const result = await db.query(searchQuery, values);
   
-      // Also get total count (for pagination info)
       const countQuery = `
         SELECT COUNT(*) FROM collections
         WHERE name ILIKE $1
@@ -55,7 +51,6 @@ router.get("/owned", authenticateToken, async (req, res) => {
       const userId = req.user.id;
       console.log("hereeee", userId)
   
-      // Retrieve collections where created_by = the current user
       const result = await db.query(
         `
         SELECT id, name, description, created_at
@@ -66,7 +61,7 @@ router.get("/owned", authenticateToken, async (req, res) => {
         [userId]
       );
   
-      res.json(result.rows); // send back an array of collections
+      res.json(result.rows); 
     } catch (error) {
       console.error("Error fetching owned collections:", error);
       res.status(500).json({ message: "Server error" });
@@ -78,7 +73,6 @@ router.get("/owned", authenticateToken, async (req, res) => {
   
     try {
       // 1) Fetch the collection details
-      // Example table schema: collection (id, name, description, created_by, created_at, etc.)
       const collectionQuery = `
         SELECT id, name, description
         FROM collections
@@ -92,8 +86,7 @@ router.get("/owned", authenticateToken, async (req, res) => {
   
       const collection = collectionResult.rows[0];
   
-      // 2) Fetch the number of contributions (optional)
-      // Example table schema: contributions (id, collection_id, user_id, file_url, contributed_at, etc.)
+      // 2) Fetch the number of contributions 
       const countQuery = `
         SELECT COUNT(*) AS contribution_count
         FROM contributions
@@ -108,7 +101,6 @@ router.get("/owned", authenticateToken, async (req, res) => {
         name: collection.name,
         description: collection.description,
         contributionCount,
-        // Add any other fields you need
       };
   
       res.json(responseData);

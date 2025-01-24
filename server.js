@@ -4,7 +4,8 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 
 const authRoutes = require("./routes/auth");
-const projectRoutes = require("./routes/collections");
+const collectionRoutes = require("./routes/collections");
+const contributeRoutes = require("./routes/contribute")
 
 const app = express();
 
@@ -19,7 +20,8 @@ app.use((req, res, next) => {
 
 // Routes
 app.use("/auth", authRoutes);
-app.use("/collections", projectRoutes);
+app.use("/collections", collectionRoutes);
+app.use("/contribute", contributeRoutes);
 
 // Start the server
 const PORT = process.env.PORT || 3000;
