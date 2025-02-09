@@ -3,11 +3,11 @@ const express = require("express");
 const fs = require("fs");
 const path = require("path");
 const archiver = require("archiver");
-const multer = require("multer");
-const multerS3 = require("multer-s3");
 const AWS = require("aws-sdk");
 const { authenticateToken } = require("../utils/middleware");
 const db = require("../db");
+const sharp = require("sharp");
+const rateLimit = require("express-rate-limit");
 
 const router = express.Router();
 
@@ -100,8 +100,15 @@ router.get("/:id/zip", authenticateToken, async (req, res) => {
  * Contribute to a collection by uploading a file,
  * stored in S3 if ENABLE_S3, or locally if not.
  */
-router.post("/:id", authenticateToken, async (req, res) => {
-    // No upload.single("file")
+
+
+// Create a limiter that allows 5 contributions per user/IP per minute
+const contributionLimiter = rateLimit({
+  windowMs: 60 * 1000,   
+  max: 5,                
+  message: "Too many contributions from this IP, please try again later."
+});
+router.post("/:id", authenticateToken, contributionLimiter, async (req, res) => {
     const { id } = req.params;
     const { image } = req.body;
   
@@ -110,6 +117,12 @@ router.post("/:id", authenticateToken, async (req, res) => {
         return res.status(400).json({ message: "No base64 image provided" });
       }
       const buffer = Buffer.from(image, "base64");
+      const processedBuffer = await sharp(buffer)
+        .resize(400, 400, { fit: "cover" })   // size normalization to 400x400
+        .gamma(2.0)                            // basic contrast adjustment
+        .toColourspace("rgb")                  // ensure RGB
+        .normalize()                            // auto contrast stretch
+        .toBuffer();
   
       let fileUrl;
   
@@ -124,7 +137,7 @@ router.post("/:id", authenticateToken, async (req, res) => {
           .putObject({
             Bucket: process.env.AWS_BUCKET_NAME,
             Key: filePath,
-            Body: buffer,
+            Body: processedBuffer,
             ContentType: "image/png",
           })
           .promise();
@@ -141,7 +154,7 @@ router.post("/:id", authenticateToken, async (req, res) => {
         const filename = `${userIdHash}_${Date.now()}_canvas.png`;
         const localPath = path.join(folderPath, filename);
   
-        fs.writeFileSync(localPath, buffer);
+        fs.writeFileSync(localPath, processedBuffer);
         fileUrl = localPath;
       }
   

@@ -77,3 +77,7 @@ Run docker compose:
 ```
 
 This will run the database and backed services and the backed server listens on localhost PORT 3000.
+
+## 4. Run tests
+
+Aftr making sure you run the docker compose, run `npm test`
