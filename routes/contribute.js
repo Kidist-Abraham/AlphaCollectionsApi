@@ -105,7 +105,7 @@ router.get("/:id/zip", authenticateToken, async (req, res) => {
 // Create a limiter that allows 5 contributions per user/IP per minute
 const contributionLimiter = rateLimit({
   windowMs: 60 * 1000,   
-  max: 5,                
+  max: 10,                
   message: "Too many contributions from this IP, please try again later."
 });
 router.post("/:id", authenticateToken, contributionLimiter, async (req, res) => {
@@ -120,7 +120,6 @@ router.post("/:id", authenticateToken, contributionLimiter, async (req, res) => 
       const processedBuffer = await sharp(buffer)
         .resize(400, 400, { fit: "cover" })   // size normalization to 400x400
         .gamma(2.0)                            // basic contrast adjustment
-        .toColourspace("rgb")                  // ensure RGB
         .normalize()                            // auto contrast stretch
         .toBuffer();
   

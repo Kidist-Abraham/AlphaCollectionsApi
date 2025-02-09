@@ -7,6 +7,7 @@ This repository contains the **backend** for managing "Collections" and user con
 1. [Overview](#1-overview)  
 2. [Environment Variables](#2-environment-variables)  
 3. [Setup & Installation](#3-setup--installation)  
+4. [Run tests](#4-run-tests)  
 
 ---
 
